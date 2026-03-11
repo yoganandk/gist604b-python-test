@@ -1,0 +1,331 @@
+"""
+Pandas Basics for GIS Data Analysis - Student Implementation
+===========================================================
+
+🎓 CRITICAL: ASSIGNMENT WORKFLOW - READ THIS FIRST!
+==================================================
+
+This is the file where you implement your final functions for grading.
+The notebooks teach you - this file gets graded!
+
+📚 LEARNING PROCESS FOR EACH FUNCTION:
+1. Open the notebook: `notebooks/01_function_load_and_explore_gis_data.ipynb`
+2. Work through the tutorial step by step in the notebook
+3. Build and test your function in the notebook environment
+4. Copy your working function from the notebook to THIS file
+5. Replace the TODO comments below with your code
+6. Run tests: `uv run pytest tests/test_pandas_basics.py::TestClassName -v`
+7. Repeat for all 4 functions
+
+🔑 KEY POINTS:
+- Notebooks = Learning Environment (experiment, learn, practice)
+- THIS FILE = Your Submission (what gets graded)
+- Tests = Verification (prove your code works)
+
+📋 FUNCTIONS TO IMPLEMENT IN THIS FILE:
+=====================================
+✅ Function 1: load_and_explore_gis_data()     → notebooks/01_function_...
+✅ Function 2: filter_environmental_data()     → notebooks/02_function_...
+✅ Function 3: calculate_station_statistics()  → notebooks/03_function_...
+✅ Function 4: join_station_data()             → notebooks/04_function_...
+
+💡 WHAT YOU'LL LEARN:
+- How to load CSV files into pandas DataFrames
+- How to explore and understand your data (shape, info, describe)
+- How to filter data based on conditions (boolean indexing)
+- How to calculate grouped statistics (groupby, aggregation)
+- How to join/merge multiple datasets together
+
+🧪 TESTING YOUR WORK:
+- Test one function: `uv run pytest tests/test_pandas_basics.py::TestClassName -v`
+- Test all functions: `uv run pytest tests/ -v`
+- All tests must pass for full credit!
+
+📊 GRADING:
+- Each function is worth equal points
+- Tests must pass for credit
+- Code quality and documentation matter
+- Follow the patterns shown in the notebooks
+
+Good luck! 🚀
+"""
+
+import pandas as pd
+from pathlib import Path
+
+
+# =============================================================================
+# FUNCTION 1: LOAD AND EXPLORE GIS DATA
+# =============================================================================
+
+def load_and_explore_gis_data(file_path):
+    """
+    LOAD AND EXPLORE GIS DATA (Your first pandas function!)
+    
+    This function loads a CSV file into a pandas DataFrame and shows you key information
+    like how many rows and columns it has, what the columns are called, and what the
+    first few rows look like.
+    
+    Think of this as your first step whenever you get a new dataset - you need to
+    understand what you're working with before you can analyze it!
+    
+    📚 Learning Resource: See `notebooks/01_function_load_and_explore_gis_data.ipynb`
+    🧪 Test Command: `uv run pytest tests/test_pandas_basics.py::TestLoadAndExploreGISData -v`
+    
+    Args:
+        file_path (str): Path to the CSV file (like 'data/weather_stations.csv')
+    
+    Returns:
+        pandas.DataFrame: The loaded data as a DataFrame (like a spreadsheet in Python)
+    
+    Example:
+        >>> stations_df = load_and_explore_gis_data('data/weather_stations.csv')
+        Loading data from: data/weather_stations.csv
+        Dataset shape: (150, 6) - That's 150 rows and 6 columns!
+        ...
+    """
+    
+    # TODO: Print a header to show what function is running
+    # TODO: Use print("=" * 50) and print("LOADING AND EXPLORING GIS DATA")
+    
+    # TODO: Print the file path being loaded
+    # TODO: Use print(f"Loading data from: {file_path}")
+    
+    # TODO: Try to load the CSV file using pd.read_csv()
+    # TODO: Wrap in try/except to handle missing files gracefully
+    # TODO: If file doesn't exist, print error and return None
+    
+    # TODO: Print the shape of the DataFrame (rows, columns)
+    # TODO: Use df.shape to get a tuple like (150, 6)
+    # TODO: Print it in a friendly way: "Dataset shape: (150, 6) - That's 150 rows and 6 columns!"
+    
+    # TODO: Print the column names
+    # TODO: Use df.columns to get the list
+    # TODO: Print: "Columns: ['station_id', 'name', 'latitude', ...]"
+    
+    # TODO: Print the first few rows using df.head()
+    # TODO: Show this to help understand the data
+    
+    # TODO: Print basic statistics using df.describe()
+    # TODO: This shows min, max, mean for numeric columns
+    
+    # TODO: Check for missing values using df.isnull().sum()
+    # TODO: Print how many missing values in each column
+    
+    # TODO: Print a completion message
+    
+    # TODO: Return the loaded DataFrame
+    
+    pass  # Remove this line when you implement the function
+
+
+# =============================================================================
+# FUNCTION 2: FILTER ENVIRONMENTAL DATA
+# =============================================================================
+
+def filter_environmental_data(df, min_temp=15, max_temp=30, quality="good"):
+    """
+    FILTER ENVIRONMENTAL DATA (Like applying filters in Excel)
+    
+    This function filters temperature readings to show only data within a specified
+    range AND with good data quality. It's like using Excel's filter feature, but
+    more powerful because you can combine multiple conditions!
+    
+    📚 Learning Resource: See `notebooks/02_function_filter_environmental_data.ipynb`
+    🧪 Test Command: `uv run pytest tests/test_pandas_basics.py::TestFilterEnvironmentalData -v`
+    
+    Args:
+        df (pandas.DataFrame): The environmental data to filter
+        min_temp (float): Minimum temperature threshold (default: 15°C)
+        max_temp (float): Maximum temperature threshold (default: 30°C)
+        quality (str): Required data quality level (default: "good")
+    
+    Returns:
+        pandas.DataFrame: Filtered data (only rows that meet ALL conditions)
+    
+    Example:
+        >>> filtered_df = filter_environmental_data(readings_df, min_temp=20, max_temp=30, quality='good')
+        Original data: 1000 rows
+        After filtering: 247 rows (24.7% of data retained)
+        Filters applied:
+          - Temperature: 20.0°C to 30.0°C
+          - Data quality: good
+    """
+    
+    # TODO: Print a header
+    # TODO: Use print("=" * 50) and print("FILTERING ENVIRONMENTAL DATA")
+    
+    # TODO: Print the original DataFrame shape
+    # TODO: Use len(df) to get the number of rows
+    
+    # TODO: Filter by temperature range using boolean indexing
+    # TODO: Create a mask: (df['temperature_c'] >= min_temp) & (df['temperature_c'] <= max_temp)
+    # TODO: Apply the mask: filtered_df = df[mask]
+    
+    # TODO: Filter by data quality
+    # TODO: Add another condition: filtered_df = filtered_df[filtered_df['data_quality'] == quality]
+    
+    # TODO: Calculate and print filtering statistics
+    # TODO: - How many rows remain after filtering
+    # TODO: - What percentage of data was retained
+    # TODO: - Show the filter criteria used
+    
+    # TODO: Return the filtered DataFrame
+    
+    pass  # Remove this line when you implement the function
+
+
+# =============================================================================
+# FUNCTION 3: CALCULATE STATION STATISTICS
+# =============================================================================
+
+def calculate_station_statistics(df):
+    """
+    CALCULATE STATION STATISTICS (Like pivot tables in Excel!)
+    
+    This function groups temperature readings by weather station and calculates
+    summary statistics (average temperature, number of readings, etc.) for each
+    station. This is similar to creating a pivot table in Excel!
+    
+    📚 Learning Resource: See `notebooks/03_function_calculate_station_statistics.ipynb`
+    🧪 Test Command: `uv run pytest tests/test_pandas_basics.py::TestCalculateStationStatistics -v`
+    
+    Args:
+        df (pandas.DataFrame): Environmental readings data with 'station_id' and 'temperature_c' columns
+    
+    Returns:
+        pandas.DataFrame: Statistics for each station with columns:
+            - station_id: The weather station identifier
+            - reading_count: Number of readings from this station
+            - avg_temperature: Average temperature for this station
+    
+    Example:
+        >>> stats_df = calculate_station_statistics(readings_df)
+        Calculating statistics for 5 unique stations...
+        Statistics calculated:
+          - Total readings analyzed: 1000
+          - Stations with data: 5
+          - Average readings per station: 200.0
+    """
+    
+    # TODO: Print a header
+    # TODO: Use print("=" * 50) and print("CALCULATING STATION STATISTICS")
+    
+    # TODO: Count unique stations
+    # TODO: Use df['station_id'].nunique()
+    
+    # TODO: Group by station_id
+    # TODO: Use df.groupby('station_id')
+    
+    # TODO: Calculate statistics for each group
+    # TODO: - Count of readings: use .size() or .count()
+    # TODO: - Average temperature: use .mean()
+    # TODO: Create a new DataFrame with these statistics
+    
+    # TODO: Reset the index to make station_id a regular column
+    # TODO: Use .reset_index()
+    
+    # TODO: Rename columns to be clear
+    # TODO: Use .rename(columns={'temperature_c': 'avg_temperature', ...})
+    
+    # TODO: Print summary statistics
+    # TODO: - Total readings analyzed
+    # TODO: - Number of stations
+    # TODO: - Average readings per station
+    
+    # TODO: Return the statistics DataFrame
+    
+    pass  # Remove this line when you implement the function
+
+
+# =============================================================================
+# FUNCTION 4: JOIN STATION DATA
+# =============================================================================
+
+def join_station_data(stations_df, readings_df):
+    """
+    JOIN STATION DATA (Combining datasets like VLOOKUP in Excel!)
+    
+    This function joins station information (name, location) with temperature readings.
+    It's like using VLOOKUP in Excel, but more powerful! You'll add station details
+    (like station name and coordinates) to each temperature reading.
+    
+    📚 Learning Resource: See `notebooks/04_function_join_station_data.ipynb`
+    🧪 Test Command: `uv run pytest tests/test_pandas_basics.py::TestJoinStationData -v`
+    
+    Args:
+        stations_df (pandas.DataFrame): Station information with 'station_id', 'station_name', 
+                                       'latitude', 'longitude', etc.
+        readings_df (pandas.DataFrame): Temperature readings with 'station_id', 'date', 
+                                       'temperature_c', etc.
+    
+    Returns:
+        pandas.DataFrame: Combined dataset with readings AND station information
+    
+    Example:
+        >>> joined_df = join_station_data(stations_df, readings_df)
+        Joining station information with readings...
+        Stations table: 5 stations
+        Readings table: 1000 readings
+        Joined table: 1000 rows with station details added!
+    """
+    
+    # TODO: Print a header
+    # TODO: Use print("=" * 50) and print("JOINING STATION DATA")
+    
+    # TODO: Print the shapes of both input DataFrames
+    # TODO: Show how many stations and how many readings
+    
+    # TODO: Join the DataFrames using pd.merge()
+    # TODO: Use the 'station_id' column as the key
+    # TODO: Use how='left' to keep all readings even if station info is missing
+    
+    # TODO: Print the shape of the joined DataFrame
+    # TODO: Verify all readings are still present
+    
+    # TODO: Print the new columns that were added
+    # TODO: Show which columns came from the stations table
+    
+    # TODO: Return the joined DataFrame
+    
+    pass  # Remove this line when you implement the function
+
+
+# =============================================================================
+# HELPER FUNCTIONS (You don't need to modify these - they're provided!)
+# =============================================================================
+
+def _check_required_columns(df, required_columns, data_name="DataFrame"):
+    """
+    Helper function to check if required columns exist in a DataFrame.
+    
+    Args:
+        df (pandas.DataFrame): DataFrame to check
+        required_columns (list): List of required column names
+        data_name (str): Name to use in error messages
+    
+    Returns:
+        tuple: (bool, list) - (all_present, missing_columns)
+    """
+    if df is None or df.empty:
+        return False, required_columns
+    
+    missing = [col for col in required_columns if col not in df.columns]
+    return len(missing) == 0, missing
+
+
+def _format_number(value, decimals=1):
+    """
+    Helper function to format numbers for display.
+    
+    Args:
+        value: Number to format
+        decimals (int): Number of decimal places
+    
+    Returns:
+        str: Formatted number
+    """
+    try:
+        return f"{float(value):.{decimals}f}"
+    except (ValueError, TypeError):
+        return str(value)
