@@ -1,0 +1,16 @@
+station_id,station_name,latitude,longitude,elevation_m,station_type
+STN_001,Central Park Weather Station,40.7829,-73.9654,35,meteorological
+STN_002,Times Square Monitor,40.7580,-73.9855,10,air_quality
+STN_003,Brooklyn Bridge Station,40.7061,-73.9969,25,meteorological
+STN_004,Queens Plaza Monitor,40.7505,-73.9370,15,air_quality
+STN_005,Staten Island Station,40.5795,-74.1502,45,meteorological
+STN_006,Bronx Zoo Weather,40.8506,-73.8769,75,meteorological
+STN_007,JFK Airport Monitor,40.6413,-73.7781,8,meteorological
+STN_008,Liberty Island Station,40.6892,-74.0445,12,air_quality
+STN_009,High Line Monitor,40.7480,-74.0048,18,air_quality
+STN_010,Prospect Park Station,40.6618,-73.9692,52,meteorological
+STN_011,Wall Street Monitor,40.7074,-74.0113,6,air_quality
+STN_012,Columbia University,40.8075,-73.9626,85,meteorological
+STN_013,Coney Island Station,40.5755,-73.9707,3,meteorological
+STN_014,LaGuardia Monitor,40.7769,-73.8740,21,air_quality
+STN_015,Battery Park Station,40.7033,-74.0170,4,air_quality
