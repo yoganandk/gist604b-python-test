@@ -389,35 +389,144 @@ class RealDataDownloader:
         
         major_parks = {
             'name': [
-                'Yellowstone National Park',
+                # West Coast
+                'Olympic National Park',
+                'Crater Lake National Park',
+                'Redwood National Park',
                 'Yosemite National Park',
+                'Sequoia National Park',
+                'Channel Islands National Park',
+                # Southwest
                 'Grand Canyon National Park',
                 'Zion National Park',
+                'Bryce Canyon National Park',
+                'Arches National Park',
+                'Canyonlands National Park',
+                'Petrified Forest National Park',
+                'Saguaro National Park',
+                'Big Bend National Park',
+                'Guadalupe Mountains National Park',
+                # Rocky Mountains
+                'Yellowstone National Park',
+                'Grand Teton National Park',
                 'Glacier National Park',
-                'Olympic National Park',
-                'Sequoia National Park',
                 'Rocky Mountain National Park',
-                'Mount Rainier National Park',
-                'Crater Lake National Park'
+                'Great Sand Dunes National Park',
+                # Midwest
+                'Badlands National Park',
+                'Theodore Roosevelt National Park',
+                'Wind Cave National Park',
+                'Isle Royale National Park',
+                # Southeast
+                'Hot Springs National Park',
+                'Mammoth Cave National Park',
+                'Great Smoky Mountains National Park',
+                'Shenandoah National Park',
+                'Everglades National Park',
+                'Biscayne National Park',
+                'Dry Tortugas National Park',
+                # Northeast
+                'Acadia National Park',
+                # Alaska (major)
+                'Denali National Park',
+                'Glacier Bay National Park',
+                'Kenai Fjords National Park',
+                # Hawaii
+                'Haleakalā National Park',
+                'Hawaiʻi Volcanoes National Park'
             ],
             'state': [
-                'Wyoming/Montana/Idaho',
-                'California',
-                'Arizona',
-                'Utah',
-                'Montana',
-                'Washington',
-                'California',
-                'Colorado',
-                'Washington',
-                'Oregon'
+                 # West Coast
+                'Washington', 'Oregon', 'California', 'California', 'California', 'California',
+                # Southwest
+                'Arizona', 'Utah', 'Utah', 'Utah', 'Utah', 'Arizona', 'Arizona', 'Texas', 'Texas',
+                # Rocky Mountains
+                'Wyoming/Montana/Idaho', 'Wyoming', 'Montana', 'Colorado', 'Colorado',
+                # Midwest
+                'South Dakota', 'North Dakota', 'South Dakota', 'Michigan',
+                # Southeast
+                'Arkansas', 'Kentucky', 'Tennessee/North Carolina', 'Virginia', 'Florida', 'Florida', 'Florida',
+                # Northeast
+                'Maine',
+                # Alaska
+                'Alaska', 'Alaska', 'Alaska',
+                # Hawaii
+                'Hawaii', 'Hawaii'
             ],
-            'designation': ['National Park'] * 10,
-            'area_km2': [8991, 3074, 4926, 595, 4100, 3734, 1635, 1075, 956, 741],
-            'established': [1872, 1890, 1919, 1919, 1910, 1938, 1890, 1915, 1899, 1902],
+            'designation': ['National Park'] * 37,
+            'area_km2': [
+                # West Coast
+                3734, 741, 534, 3074, 1635, 1009,
+                # Southwest
+                4926, 595, 145, 310, 1366, 895, 370, 3243, 350,
+                # Rocky Mountains
+                8991, 1255, 4100, 1075, 340,
+                # Midwest
+                982, 285, 137, 2314,
+                # Southeast
+                23, 215, 2114, 809, 6105, 700, 262,
+                # Northeast
+                198,
+                # Alaska
+                24585, 13287, 2711,
+                # Hawaii
+                135, 1348
+            ],
+            'established': [
+                # West Coast
+                1938, 1902, 1968, 1890, 1890, 1980,
+                # Southwest
+                1919, 1919, 1928, 1929, 1964, 1962, 1994, 1944, 1972,
+                # Rocky Mountains
+                1872, 1929, 1910, 1915, 2004,
+                # Midwest
+                1978, 1978, 1903, 1940,
+                # Southeast
+                1921, 1941, 1934, 1935, 1947, 1980, 1992,
+                # Northeast
+                1919,
+                # Alaska
+                1917, 1980, 1980,
+                # Hawaii
+                1916, 1916
+            ],
             # Approximate centroids
-            'longitude': [-110.5, -119.5, -112.1, -113.0, -113.8, -123.5, -118.6, -105.7, -121.7, -122.1],
-            'latitude': [44.6, 37.8, 36.1, 37.3, 48.8, 47.8, 36.5, 40.3, 46.9, 42.9]
+            'longitude': [
+                # West Coast
+                -123.5, -122.1, -124.0, -119.5, -118.6, -119.9,
+                # Southwest
+                -112.1, -113.0, -112.2, -109.6, -109.8, -109.8, -110.7, -103.2, -104.9,
+                # Rocky Mountains
+                -110.5, -110.8, -113.8, -105.7, -105.6,
+                # Midwest
+                -102.4, -103.5, -103.5, -88.8,
+                # Southeast
+                -93.1, -86.1, -83.5, -78.5, -80.9, -80.2, -82.9,
+                # Northeast
+                -68.2,
+                # Alaska
+                -151.0, -136.9, -149.9,
+                # Hawaii
+                -156.2, -155.5
+            ],
+            'latitude': [
+                # West Coast
+                47.8, 42.9, 41.3, 37.8, 36.5, 34.0,
+                # Southwest
+                36.1, 37.3, 37.6, 38.7, 38.3, 35.0, 32.2, 29.2, 31.9,
+                # Rocky Mountains
+                44.6, 43.8, 48.8, 40.3, 37.7,
+                # Midwest
+                43.9, 47.6, 43.6, 47.9,
+                # Southeast
+                34.5, 37.2, 35.7, 38.5, 25.3, 25.5, 24.6,
+                # Northeast
+                44.4,
+                # Alaska
+                63.1, 58.7, 60.0,
+                # Hawaii
+                20.7, 19.4
+            ]
         }
         
         # Create points (we'll buffer these to approximate park boundaries)
