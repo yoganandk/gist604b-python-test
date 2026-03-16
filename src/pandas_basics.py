@@ -28,26 +28,6 @@ The notebooks teach you - this file gets graded!
 ✅ Function 2: filter_environmental_data()     → notebooks/02_function_...
 ✅ Function 3: calculate_station_statistics()  → notebooks/03_function_...
 ✅ Function 4: join_station_data()             → notebooks/04_function_...
-
-💡 WHAT YOU'LL LEARN:
-- How to load CSV files into pandas DataFrames
-- How to explore and understand your data (shape, info, describe)
-- How to filter data based on conditions (boolean indexing)
-- How to calculate grouped statistics (groupby, aggregation)
-- How to join/merge multiple datasets together
-
-🧪 TESTING YOUR WORK:
-- Test one function: `uv run pytest tests/test_pandas_basics.py::TestClassName -v`
-- Test all functions: `uv run pytest tests/ -v`
-- All tests must pass for full credit!
-
-📊 GRADING:
-- Each function is worth equal points
-- Tests must pass for credit
-- Code quality and documentation matter
-- Follow the patterns shown in the notebooks
-
-Good luck! 🚀
 """
 
 import pandas as pd
