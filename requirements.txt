@@ -4,3 +4,4 @@ rasterio
 jupyter
 pytest
 uv
+matplotlib
