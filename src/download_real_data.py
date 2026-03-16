@@ -8,15 +8,11 @@ This script downloads authoritative spatial data from:
 - Natural Earth populated places
 - US National Parks (synthetic dataset)
 
-**Fallback:** If downloads fail (server issues, network problems), the script
-automatically uses pre-bundled backup data from data/.bundled/
-
 Usage:
     python scripts/download_real_data.py --all
     python scripts/download_real_data.py --ecoregions
     python scripts/download_real_data.py --cities
     python scripts/download_real_data.py --protected-areas
-    python scripts/download_real_data.py --use-bundled  # Skip downloads, use backup
 
 Author: GIST 604B Course Team
 License: Educational use - see individual dataset licenses
@@ -39,46 +35,18 @@ warnings.filterwarnings('ignore')
 class RealDataDownloader:
     """Download and prepare real spatial datasets."""
     
-    def __init__(self, data_dir: Path = Path("data"), use_bundled: bool = False):
+    repo_root = Path(__file__).resolve().parents[1]
+    data_dir = repo_root / "data"
+
+    def __init__(self, data_dir: Path = data_dir):
         self.data_dir = data_dir
-        self.bundled_dir = data_dir / ".bundled"
         self.temp_dir = data_dir / "temp"
         self.temp_dir.mkdir(parents=True, exist_ok=True)
-        self.use_bundled = use_bundled
         
         # Create subdirectories
         (self.data_dir / "ecoregions").mkdir(exist_ok=True)
         (self.data_dir / "cities").mkdir(exist_ok=True)
         (self.data_dir / "protected_areas").mkdir(exist_ok=True)
-    
-    def copy_from_bundled(self, dataset_name: str) -> bool:
-        """Copy dataset from bundled backup."""
-        dataset_mapping = {
-            'ecoregions': ('ecoregions', 'epa_level3_western_us.geojson'),
-            'cities': ('cities', 'ne_cities_us.geojson'),
-            'protected': ('protected_areas', 'national_parks_major.geojson')
-        }
-        
-        if dataset_name not in dataset_mapping:
-            return False
-        
-        subdir, filename = dataset_mapping[dataset_name]
-        bundled_file = self.bundled_dir / subdir / filename
-        output_file = self.data_dir / subdir / filename
-        
-        if not bundled_file.exists():
-            print(f"❌ Bundled file not found: {bundled_file}")
-            return False
-        
-        try:
-            print(f"📦 Using bundled backup: {filename}")
-            shutil.copy2(bundled_file, output_file)
-            size_kb = output_file.stat().st_size / 1024
-            print(f"✅ Copied from backup: {filename} ({size_kb:.1f} KB)")
-            return True
-        except Exception as e:
-            print(f"❌ Error copying bundled file: {e}")
-            return False
         
     def download_file(self, url: str, output_path: Path) -> bool:
         """Download a file with progress indication."""
@@ -129,11 +97,6 @@ class RealDataDownloader:
         print("\n🌲 EPA LEVEL III ECOREGIONS")
         print("=" * 50)
         
-        # Skip download if using bundled data
-        if self.use_bundled:
-            print("Using pre-bundled data (--use-bundled flag)")
-            return None  # Will be handled by save_datasets
-        
         # Try multiple sources in order
         urls = [
             "https://dmap-prod-oms-edc.s3.us-east-1.amazonaws.com/ORD/Ecoregions/us/us_eco_l3.zip",  # EPA S3 bucket (primary)
@@ -156,10 +119,7 @@ class RealDataDownloader:
         
         if not success:
             print("❌ All download sources failed")
-            print("   Attempting to use bundled backup data...")
-            if self.copy_from_bundled('ecoregions'):
-                return None  # Copied successfully, skip processing
-            print("   ⚠️  No backup available - ecoregions will be missing")
+            print("   ⚠️ Ecoregions will be missing")
             return None
         
         # Extract
@@ -261,21 +221,13 @@ class RealDataDownloader:
         print("\n🏙️  NATURAL EARTH CITIES")
         print("=" * 50)
         
-        # Skip download if using bundled data
-        if self.use_bundled:
-            print("Using pre-bundled data (--use-bundled flag)")
-            return None  # Will be handled by save_datasets
-        
         url = "https://naciscdn.org/naturalearth/10m/cultural/ne_10m_populated_places.zip"
         zip_path = self.temp_dir / "ne_cities.zip"
         extract_dir = self.temp_dir / "cities"
         
         # Download
         if not self.download_file(url, zip_path):
-            print("   Attempting to use bundled backup data...")
-            if self.copy_from_bundled('cities'):
-                return None  # Copied successfully
-            print("   ⚠️  No backup available - cities will be missing")
+            print("   ⚠️  Cities will be missing")
             return None
         
         # Extract
@@ -373,14 +325,6 @@ class RealDataDownloader:
         """
         print("\n🏞️  US NATIONAL PARKS")
         print("=" * 50)
-        
-        # Skip creation if using bundled data
-        if self.use_bundled:
-            print("Using pre-bundled data (--use-bundled flag)")
-            if self.copy_from_bundled('protected'):
-                return None
-            print("   ⚠️  No backup available - protected areas will be missing")
-            return None
         
         print("Note: Using NPS data as representative protected areas sample")
         
@@ -600,8 +544,6 @@ def main():
     parser.add_argument('--region', default='western_us', 
                        choices=['western_us', 'conus', 'northeast'],
                        help='Geographic region for ecoregions')
-    parser.add_argument('--use-bundled', action='store_true', 
-                       help='Skip downloads, use pre-bundled backup data')
     parser.add_argument('--cleanup', action='store_true', help='Clean up temporary files')
     
     args = parser.parse_args()
@@ -610,7 +552,7 @@ def main():
     if not any([args.ecoregions, args.cities, args.protected_areas]):
         args.all = True
     
-    downloader = RealDataDownloader(use_bundled=args.use_bundled)
+    downloader = RealDataDownloader()
     
     print("=" * 70)
     print("🌍 REAL SPATIAL DATA DOWNLOADER")
