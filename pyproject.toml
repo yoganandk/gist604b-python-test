@@ -1,0 +1,22 @@
+[project]
+name = "python-gis-development"
+version = "0.1.0"
+description = "Python GIS development environment for pandas, GeoPandas, and Rasterio"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pandas",
+    "numpy",
+    "geopandas",
+    "rasterio",
+    "shapely",
+    "pyproj",
+    "jupyter",
+    "pytest",
+    "matplotlib"
+]
+
+[tool.uv]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
