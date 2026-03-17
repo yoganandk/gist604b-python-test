@@ -1,7 +1,0 @@
-pandas
-geopandas
-rasterio
-jupyter
-pytest
-uv
-matplotlib
