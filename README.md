@@ -1,22 +1,35 @@
-# gist604b-pandas
+# GIST 604B – Python for GIS
 
-Python pandas exercises for tabular GIS data analysis.
+Repository for working with tabular, vector, and raster GIS data using Python.
 
-## Workflow
+## Repository Structure
 
-Work through the notebooks in order:
+    .
+    ├── README.md
+    ├── .devcontainer
+    │   ├── devcontainer.json
+    │   ├── Dockerfile
+    ├── data/
+    │   ├── neighborhood_samples.geojson
+    │   ├── temperature_readings.csv
+    │   └── weather_stations.csv
+    ├── notebooks/
+    │   ├── pandas/
+    │   ├── geopandas/
+    │   └── rasterio/
+    ├── src/
+    │   ├── pandas_basics.py
+    │   ├── geopandas_basics.py
+    │   └── download_real_data.py
+    ├── tests/
+    │   ├── test_pandas_basics.py
+    │   └── test_geopandas_basics.py
+    ├── pyproject.toml
+    └── uv.lock
 
-1. `notebooks/01_load_and_explore_data.ipynb`
-2. `notebooks/02_filter_environmental_data.ipynb`
-3. `notebooks/03_calculate_station_statistics.ipynb`
-4. `notebooks/04_join_station_data.ipynb`
+## Notes
 
-Implement the required functions in:
-
-`src/pandas_basics.py`
-
-Run tests to verify your work:
-
-`pytest`
-
-Detailed assignment instructions are provided in D2L.
+- Notebooks are for exploration and learning.
+- Final implementations are in `src/`.
+- Tests validate pandas and GeoPandas functionality.
+- Rasterio work is completed entirely in the notebook.
