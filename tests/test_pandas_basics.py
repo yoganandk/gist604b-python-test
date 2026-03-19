@@ -130,9 +130,8 @@ class TestLoadAndExploreGISData:
         """Test that function handles missing files appropriately."""
         result = load_and_explore_gis_data('nonexistent_file.csv')
 
-        # Function should return None or empty DataFrame for missing files
-        assert result is None or (isinstance(result, pd.DataFrame) and result.empty), \
-            "Should handle missing files gracefully"
+        # Function should return None for missing files
+        assert result is None, "Should return None for missing files"
 
     def test_data_types_are_correct(self, sample_stations_csv):
         """Test that numeric columns are loaded as numeric types."""
@@ -190,6 +189,7 @@ class TestFilterEnvironmentalData:
 
         # Function should handle this gracefully (return empty DataFrame or raise informative error)
         assert isinstance(result, pd.DataFrame), "Should return DataFrame"
+        assert result.empty, "Should return empty DataFrame when required columns are missing"
 
 
 class TestCalculateStationStatistics:
@@ -222,11 +222,9 @@ class TestCalculateStationStatistics:
         stn_001_result = result[result['station_id'] == 'STN_001']
 
         if not stn_001_result.empty:
-            expected_avg_temp = stn_001_data['temperature_c'].mean()
+            expected_avg_temp = round(stn_001_data['temperature_c'].mean(), 1)
             actual_avg_temp = stn_001_result['avg_temperature'].iloc[0]
-
-            assert abs(actual_avg_temp - expected_avg_temp) < 0.01, \
-                f"Average temperature calculation incorrect. Expected {expected_avg_temp}, got {actual_avg_temp}"
+            assert actual_avg_temp == expected_avg_temp, f"Average temperature calculation incorrect. Expected {expected_avg_temp}, got {actual_avg_temp}"
 
     def test_reading_count_correct(self, sample_readings_df):
         """Test that reading count is calculated correctly."""
