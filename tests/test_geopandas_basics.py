@@ -1,25 +1,39 @@
 """
 GIST 604B - GeoPandas Spatial Operations
-Test Suite for 7 Core Functions (15 Points)
+Unit Tests for Core Spatial Functions
 
-This test suite validates implementations of essential spatial operations:
-I/O → Explore → Transform → Operate → Analyze → Visualize
+This file contains unit tests using pytest to verify that your
+GeoPandas functions work correctly.
 
-Uses real spatial datasets:
-- Natural Earth Cities (281 US cities)
-- EPA Level III Ecoregions (12 Western US ecoregions)
-- National Parks (10 major US national parks)
+These tests reflect real-world spatial data workflows. Your functions
+must produce correct outputs, handle coordinate reference systems (CRS)
+appropriately, and return results in the expected format.
 
-Test Structure (matching grading):
-1. load_spatial_data (2 pts)
-2. explore_properties (2 pts)
-3. transform_crs (2 pts)
-4. geometry_operations (3 pts) - buffer, centroid, area, length, simplify
-5. spatial_relationships (2 pts) - intersects, contains, within, distance
-6. spatial_joins (2 pts)
-7. overlay_and_visualize (2 pts)
+General Expectations:
+- Functions must return the correct data types (GeoDataFrame or dict)
+- Dictionary outputs must include required keys exactly as expected
+- CRS must be handled correctly (no silent mismatches)
+- Geometry operations must produce valid geometries
+- Functions should not silently ignore errors or return incorrect results
 
-Author: GIST 604B Course Team
+CRS and Spatial Behavior:
+- Spatial data is typically in EPSG:4326 (WGS84)
+- Some operations (buffer, area, length) require projected CRS
+- You are responsible for ensuring appropriate CRS usage
+- CRS mismatches must be handled or raise informative errors
+
+Error Handling:
+- Missing files → FileNotFoundError
+- Invalid operations or parameters → ValueError
+
+Running Tests:
+    pytest tests/test_spatial_basics.py -v
+
+Run specific test class:
+    pytest tests/test_spatial_basics.py::TestLoadSpatialData -v
+
+Run specific test:
+    pytest tests/test_spatial_basics.py::TestLoadSpatialData::test_load_geojson_basic -v
 """
 
 import pytest
@@ -36,8 +50,12 @@ import matplotlib
 matplotlib.use('Agg')  # Non-interactive backend for testing
 import matplotlib.pyplot as plt
 
-# Import the functions to test
-from src.spatial_basics import (
+# Import the functions we want to test
+import sys
+sys.path.insert(0, 'src')
+
+try:
+    from geopandas_basics import (
     load_spatial_data,
     explore_properties,
     transform_crs,
@@ -46,7 +64,8 @@ from src.spatial_basics import (
     spatial_joins,
     overlay_and_visualize
 )
-
+except ImportError as e:
+    pytest.fail(f"Cannot import functions from src.pandas_basics: {e}")
 
 # ============================================================================
 # SHARED FIXTURES - Real Data Paths
@@ -104,7 +123,7 @@ def parks_gdf(parks_file):
 
 
 # ============================================================================
-# TEST CLASS 1: Load Spatial Data (2 points)
+# TEST CLASS 1: Load Spatial Data
 # ============================================================================
 
 class TestLoadSpatialData:
@@ -183,7 +202,7 @@ class TestLoadSpatialData:
 
 
 # ============================================================================
-# TEST CLASS 2: Explore Properties (2 points)
+# TEST CLASS 2: Explore Properties
 # ============================================================================
 
 class TestExploreProperties:
@@ -282,7 +301,7 @@ class TestExploreProperties:
 
 
 # ============================================================================
-# TEST CLASS 3: Transform CRS (2 points)
+# TEST CLASS 3: Transform CRS
 # ============================================================================
 
 class TestTransformCRS:
@@ -358,7 +377,7 @@ class TestTransformCRS:
 
     def test_invalid_target_crs(self, cities_gdf):
         """Test handling of invalid target CRS."""
-        with pytest.raises((ValueError, Exception)):
+        with pytest.raises(ValueError):
             transform_crs(cities_gdf, 'INVALID:9999')
 
     def test_geometry_validity_preserved(self, ecoregions_gdf):
@@ -376,7 +395,7 @@ class TestTransformCRS:
 
 
 # ============================================================================
-# TEST CLASS 4: Geometry Operations (3 points)
+# TEST CLASS 4: Geometry Operations
 # ============================================================================
 
 class TestGeometryOperations:
@@ -491,9 +510,13 @@ class TestGeometryOperations:
         with pytest.raises((ValueError, TypeError)):
             geometry_operations(cities_gdf, operation='buffer')  # No distance
 
+    def test_missing_simplify_parameter(self, ecoregions_gdf):
+        """Test simplify operation requires tolerance parameter."""
+        with pytest.raises((ValueError, TypeError)):
+            geometry_operations(ecoregions_gdf, operation='simplify')
 
 # ============================================================================
-# TEST CLASS 5: Spatial Relationships (2 points)
+# TEST CLASS 5: Spatial Relationships
 # ============================================================================
 
 class TestSpatialRelationships:
@@ -582,7 +605,7 @@ class TestSpatialRelationships:
 
 
 # ============================================================================
-# TEST CLASS 6: Spatial Joins (2 points)
+# TEST CLASS 6: Spatial Joins
 # ============================================================================
 
 class TestSpatialJoins:
@@ -647,13 +670,13 @@ class TestSpatialJoins:
         """Test handling of CRS mismatches."""
         cities_mercator = cities_gdf.head(20).to_crs('EPSG:3857')
 
-        # Should either handle transformation or raise error
-        try:
-            result = spatial_joins(cities_mercator, ecoregions_gdf, 
-                                 how='inner', predicate='intersects')
-            assert isinstance(result, gpd.GeoDataFrame)
-        except ValueError as e:
-            assert 'crs' in str(e).lower() or 'coordinate' in str(e).lower()
+        with pytest.raises(ValueError):
+            spatial_joins(
+            cities_mercator,
+            ecoregions_gdf,
+            how='inner',
+            predicate='intersects'
+        )
 
     def test_invalid_predicate(self, cities_gdf, ecoregions_gdf):
         """Test handling of invalid spatial predicate."""
@@ -661,9 +684,18 @@ class TestSpatialJoins:
             spatial_joins(cities_gdf, ecoregions_gdf, 
                         how='inner', predicate='invalid_predicate')
 
+    def test_invalid_join_type(self, cities_gdf, ecoregions_gdf):
+        """Test handling of invalid join type."""
+        with pytest.raises(ValueError):
+            spatial_joins(
+                cities_gdf,
+                ecoregions_gdf,
+                how='invalid_join',
+                predicate='intersects'
+            )   
 
 # ============================================================================
-# TEST CLASS 7: Overlay and Visualize (2 points)
+# TEST CLASS 7: Overlay and Visualize
 # ============================================================================
 
 class TestOverlayAndVisualize:
@@ -731,6 +763,8 @@ class TestOverlayAndVisualize:
         # Should have figure object
         assert 'figure' in result, "Should create visualization"
 
+        assert 'overlay_result' not in result
+
         # Close figure to free memory
         if 'figure' in result and result['figure'] is not None:
             plt.close(result['figure'])
@@ -776,19 +810,15 @@ class TestOverlayAndVisualize:
         cities_mercator = cities_gdf.head(10).to_crs('EPSG:3857')
         ecoregions = ecoregions_gdf.head(3)
 
-        # Should either handle CRS mismatch or raise error
-        try:
-            # Note: overlay requires polygon/polygon, so buffer cities first
-            cities_buffered = cities_mercator.copy()
-            cities_buffered.geometry = cities_buffered.geometry.buffer(1000)
+        cities_buffered = cities_mercator.copy()
+        cities_buffered.geometry = cities_buffered.geometry.buffer(1000)
 
-            result = overlay_and_visualize(cities_buffered, ecoregions, 
-                                          overlay_how='intersection')
-            assert isinstance(result, dict)
-        except (ValueError, Exception) as e:
-            # Expected if CRS mismatch not handled
-            assert 'crs' in str(e).lower() or 'coordinate' in str(e).lower() or \
-                   'overlay' in str(e).lower()
+        with pytest.raises(ValueError):
+            overlay_and_visualize(
+                cities_buffered,
+                ecoregions,
+                overlay_how='intersection'
+            )
 
 
 # ============================================================================
