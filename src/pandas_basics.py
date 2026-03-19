@@ -1,26 +1,8 @@
 """
 Pandas Basics for GIS Data Analysis - Student Implementation
-===========================================================
 
-🎓 CRITICAL: ASSIGNMENT WORKFLOW - READ THIS FIRST!
-==================================================
-
-This is the file where you implement your final functions for grading.
-The notebooks teach you - this file gets graded!
-
-📚 LEARNING PROCESS FOR EACH FUNCTION:
-1. Open the notebook: `notebooks/01_function_load_and_explore_gis_data.ipynb`
-2. Work through the tutorial step by step in the notebook
-3. Build and test your function in the notebook environment
-4. Copy your working function from the notebook to THIS file
-5. Replace the TODO comments below with your code
-6. Run tests: `uv run pytest tests/test_pandas_basics.py::TestClassName -v`
-7. Repeat for all 4 functions
-
-🔑 KEY POINTS:
-- Notebooks = Learning Environment (experiment, learn, practice)
-- THIS FILE = Your Submission (what gets graded)
-- Tests = Verification (prove your code works)
+Complete the four functions in this file.
+Use the notebooks to learn and test each function.
 
 📋 FUNCTIONS TO IMPLEMENT IN THIS FILE:
 =====================================
@@ -40,24 +22,17 @@ import os
 # =============================================================================
 
 def load_and_explore_gis_data(file_path):
-    """
-    LOAD AND EXPLORE GIS DATA (Your first pandas function!)
+   """
+    Load a CSV file and display comprehensive information about the dataset.
     
-    This function loads a CSV file into a pandas DataFrame and shows you key information
-    like how many rows and columns it has, what the columns are called, and what the
-    first few rows look like.
-    
-    Think of this as your first step whenever you get a new dataset - you need to
-    understand what you're working with before you can analyze it!
-    
-    📚 Learning Resource: See `notebooks/01_function_load_and_explore_gis_data.ipynb`
-    🧪 Test Command: `uv run pytest tests/test_pandas_basics.py::TestLoadAndExploreGISData -v`
+    This function demonstrates the first step in any data analysis project:
+    understanding your data through exploration.
     
     Args:
-        file_path (str): Path to the CSV file (like 'data/weather_stations.csv')
-    
+        file_path (str): Path to the CSV file to load
+        
     Returns:
-        pandas.DataFrame: The loaded data as a DataFrame (like a spreadsheet in Python)
+        pandas.DataFrame: The loaded dataset, or None if loading failed
     
     Example:
         >>> stations_df = load_and_explore_gis_data('data/weather_stations.csv')
@@ -106,23 +81,19 @@ def load_and_explore_gis_data(file_path):
 
 def filter_environmental_data(df, min_temp=15, max_temp=30, quality="good"):
     """
-    FILTER ENVIRONMENTAL DATA (Like applying filters in Excel)
+    Filter environmental data based on temperature range and data quality.
     
-    This function filters temperature readings to show only data within a specified
-    range AND with good data quality. It's like using Excel's filter feature, but
-    more powerful because you can combine multiple conditions!
-    
-    📚 Learning Resource: See `notebooks/02_function_filter_environmental_data.ipynb`
-    🧪 Test Command: `uv run pytest tests/test_pandas_basics.py::TestFilterEnvironmentalData -v`
+    This function demonstrates how to apply multiple filtering conditions
+    to clean and prepare environmental data for analysis.
     
     Args:
-        df (pandas.DataFrame): The environmental data to filter
-        min_temp (float): Minimum temperature threshold (default: 15°C)
-        max_temp (float): Maximum temperature threshold (default: 30°C)
+        df (pandas.DataFrame): Environmental data with temperature and quality columns
+        min_temp (float): Minimum acceptable temperature in Celsius (default: 15)
+        max_temp (float): Maximum acceptable temperature in Celsius (default: 30)
         quality (str): Required data quality level (default: "good")
-    
+        
     Returns:
-        pandas.DataFrame: Filtered data (only rows that meet ALL conditions)
+        pandas.DataFrame: Filtered data meeting all specified conditions
     
     Example:
         >>> filtered_df = filter_environmental_data(readings_df, min_temp=20, max_temp=30, quality='good')
@@ -162,23 +133,21 @@ def filter_environmental_data(df, min_temp=15, max_temp=30, quality="good"):
 
 def calculate_station_statistics(df):
     """
-    CALCULATE STATION STATISTICS (Like pivot tables in Excel!)
+    Calculate station statistics
     
     This function groups temperature readings by weather station and calculates
     summary statistics (average temperature, number of readings, etc.) for each
-    station. This is similar to creating a pivot table in Excel!
-    
-    📚 Learning Resource: See `notebooks/03_function_calculate_station_statistics.ipynb`
-    🧪 Test Command: `uv run pytest tests/test_pandas_basics.py::TestCalculateStationStatistics -v`
+    station.
     
     Args:
-        df (pandas.DataFrame): Environmental readings data with 'station_id' and 'temperature_c' columns
+        df (pandas.DataFrame): Environmental readings data with 'station_id', 'temperature_c' and 'humidity_percent' columns
     
     Returns:
         pandas.DataFrame: Statistics for each station with columns:
             - station_id: The weather station identifier
-            - reading_count: Number of readings from this station
             - avg_temperature: Average temperature for this station
+            - avg_humidity: Average humidity for this station
+            - reading_count: Number of readings from this station
     
     Example:
         >>> stats_df = calculate_station_statistics(readings_df)
@@ -224,15 +193,11 @@ def calculate_station_statistics(df):
 # =============================================================================
 
 def join_station_data(stations_df, readings_df):
-    """
-    JOIN STATION DATA (Combining datasets like VLOOKUP in Excel!)
+   """
+    Join sensor readings with station metadata
     
     This function joins station information (name, location) with temperature readings.
-    It's like using VLOOKUP in Excel, but more powerful! You'll add station details
-    (like station name and coordinates) to each temperature reading.
-    
-    📚 Learning Resource: See `notebooks/04_function_join_station_data.ipynb`
-    🧪 Test Command: `uv run pytest tests/test_pandas_basics.py::TestJoinStationData -v`
+    You'll add station details (like station name and coordinates) to each temperature reading.
     
     Args:
         stations_df (pandas.DataFrame): Station information with 'station_id', 'station_name', 
