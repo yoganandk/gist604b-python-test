@@ -18,6 +18,7 @@ import warnings
 from typing import Dict, List, Tuple, Union, Optional, Any
 from shapely.geometry import Point, LineString, Polygon, MultiPoint, MultiLineString, MultiPolygon
 import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
 
 
 # Function 1: Load Spatial Data (2 points)
