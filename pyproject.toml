@@ -13,7 +13,9 @@ dependencies = [
     "pyproj",
     "jupyter",
     "pytest",
-    "matplotlib"
+    "matplotlib",
+    "pystac-client",
+    "planetary-computer"
 ]
 
 [tool.uv]
