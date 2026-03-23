@@ -17,7 +17,7 @@
         "redhat.vscode-yaml"
       ],
       "settings": {
-        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python",
         "jupyter.askForKernelRestart": false,
         "files.associations": {
           "*.geojson": "json"
@@ -35,7 +35,7 @@
     }
   },
 
-  "postCreateCommand": "pip install uv && uv sync",
+  "postCreateCommand": "pip install uv && uv sync && .venv/bin/python -m ipykernel install --user --name python-gis-development --display-name 'python-gis-development (.venv)'"
 
   "remoteUser": "vscode"
 }
