@@ -35,7 +35,7 @@
     }
   },
 
-  "postCreateCommand": "pip install uv && uv sync && .venv/bin/python -m ipykernel install --user --name python-gis-development --display-name 'python-gis-development (.venv)'"
+  "postCreateCommand": "pip install uv && uv sync && .venv/bin/python -m ipykernel install --user --name python-gis-development --display-name \"python-gis-development (.venv)\"",
 
   "remoteUser": "vscode"
 }
