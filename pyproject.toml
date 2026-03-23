@@ -12,6 +12,7 @@ dependencies = [
     "shapely",
     "pyproj",
     "jupyter",
+    "ipykernel",
     "pytest",
     "matplotlib",
     "pystac-client",
