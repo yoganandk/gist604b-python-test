@@ -22,7 +22,7 @@ import os
 # =============================================================================
 
 def load_and_explore_gis_data(file_path):
-   """
+    """
     Load a CSV file and display comprehensive information about the dataset.
     
     This function demonstrates the first step in any data analysis project:
@@ -40,40 +40,65 @@ def load_and_explore_gis_data(file_path):
         Dataset shape: (150, 6) - That's 150 rows and 6 columns!
         ...
     """
+    print("=" * 50)
+    print("LOADING AND EXPLORING GIS DATA")
+    print("=" * 50)
     
-    # TODO: Print a header to show what function is running
-    # TODO: Use print("=" * 50) and print("LOADING AND EXPLORING GIS DATA")
+    # Step 1: Check if file exists
+    if not os.path.exists(file_path):
+        print(f"❌ ERROR: File not found: {file_path}")
+        print("Please check:")
+        print("- Is the file path correct?")
+        print("- Are you in the right directory?")
+        print("- Does the file exist?")
+        return None
     
-    # TODO: Print the file path being loaded
-    # TODO: Use print(f"Loading data from: {file_path}")
+    print(f"📁 Loading data from: {file_path}")
     
-    # TODO: Try to load the CSV file using pd.read_csv()
-    # TODO: Wrap in try/except to handle missing files gracefully
-    # TODO: If file doesn't exist, print error and return None
+    # Step 2: Load the CSV file
+    try:
+        df = pd.read_csv(file_path)
+        print("✅ File loaded successfully!")
+    except Exception as e:
+        print(f"❌ ERROR loading file: {e}")
+        return None
     
-    # TODO: Print the shape of the DataFrame (rows, columns)
-    # TODO: Use df.shape to get a tuple like (150, 6)
-    # TODO: Print it in a friendly way: "Dataset shape: (150, 6) - That's 150 rows and 6 columns!"
+    # Step 3: Show basic dataset information
+    print(f"\n📊 DATASET OVERVIEW")
+    print(f"Shape: {df.shape} - {df.shape[0]} rows and {df.shape[1]} columns")
+    print(f"Columns: {list(df.columns)}")
     
-    # TODO: Print the column names
-    # TODO: Use df.columns to get the list
-    # TODO: Print: "Columns: ['station_id', 'name', 'latitude', ...]"
+    # Step 4: Show data types
+    print(f"\n🔧 DATA TYPES:")
+    for col in df.columns:
+        print(f"   {col}: {df[col].dtype}")
     
-    # TODO: Print the first few rows using df.head()
-    # TODO: Show this to help understand the data
+    # Step 5: Show first few rows
+    print(f"\n👀 FIRST 5 ROWS:")
+    print(df.head())
     
-    # TODO: Print basic statistics using df.describe()
-    # TODO: This shows min, max, mean for numeric columns
+    # Step 6: Show summary statistics
+    print(f"\n📈 SUMMARY STATISTICS:")
+    print(df.describe())
     
-    # TODO: Check for missing values using df.isnull().sum()
-    # TODO: Print how many missing values in each column
-    
-    # TODO: Print a completion message
-    
-    # TODO: Return the loaded DataFrame
-    
-    pass  # Remove this line when you implement the function
+    # Step 7: Check for data quality issues
+    print(f"\n🔍 DATA QUALITY CHECK:")
+    missing = df.isnull().sum()
+    if missing.sum() > 0:
+        print("Missing values found:")
+        print(missing[missing > 0])
+    else:
+        print("✅ No missing values")
+        
+    duplicates = df.duplicated().sum()
+    if duplicates > 0:
+        print(f"⚠️  Found {duplicates} duplicate rows")
+    else:
+        print("✅ No duplicate rows")
 
+    print(f"\n🎉 Data exploration complete! Dataset is ready for analysis.")
+    
+    return df
 
 # =============================================================================
 # FUNCTION 2: FILTER ENVIRONMENTAL DATA
@@ -104,27 +129,82 @@ def filter_environmental_data(df, min_temp=15, max_temp=30, quality="good"):
           - Data quality: good
     """
     
-    # TODO: Print a header
-    # TODO: Use print("=" * 50) and print("FILTERING ENVIRONMENTAL DATA")
+    print("=" * 50)
+    print("FILTERING ENVIRONMENTAL DATA")
+    print("=" * 50)
     
-    # TODO: Print the original DataFrame shape
-    # TODO: Use len(df) to get the number of rows
+    # Input validation
+    if df is None or df.empty:
+        print("❌ ERROR: Empty or None DataFrame provided")
+        return pd.DataFrame()
     
-    # TODO: Filter by temperature range using boolean indexing
-    # TODO: Create a mask: (df['temperature_c'] >= min_temp) & (df['temperature_c'] <= max_temp)
-    # TODO: Apply the mask: filtered_df = df[mask]
+    # Check for required columns
+    required_columns = ['temperature_c', 'data_quality']
+    missing_columns = [col for col in required_columns if col not in df.columns]
     
-    # TODO: Filter by data quality
-    # TODO: Add another condition: filtered_df = filtered_df[filtered_df['data_quality'] == quality]
+    if missing_columns:
+        print(f"❌ ERROR: Missing required columns: {missing_columns}")
+        print(f"📋 Available columns: {list(df.columns)}")
+        return pd.DataFrame()
     
-    # TODO: Calculate and print filtering statistics
-    # TODO: - How many rows remain after filtering
-    # TODO: - What percentage of data was retained
-    # TODO: - Show the filter criteria used
+    original_count = len(df)
+    print(f"📊 Starting with {original_count} rows of environmental data")
     
-    # TODO: Return the filtered DataFrame
+    # Show filtering criteria
+    print(f"\n🎯 FILTERING CRITERIA:")
+    print(f"   Temperature range: {min_temp}°C to {max_temp}°C")
+    print(f"   Data quality: '{quality}'")
     
-    pass  # Remove this line when you implement the function
+    # Check if quality level exists
+    available_qualities = df['data_quality'].unique()
+    if quality not in available_qualities:
+        print(f"\n⚠️  WARNING: Quality level '{quality}' not found in data")
+        print(f"📋 Available quality levels: {list(available_qualities)}")
+        print("🔄 Returning original data without quality filtering...")
+        quality_filter = pd.Series([True] * len(df), index=df.index)  # No filtering
+    else:
+        quality_filter = df['data_quality'] == quality
+    
+    # Apply all filters
+    print(f"\n🔍 APPLYING FILTERS...")
+    
+    # Temperature range filter
+    temp_filter = (df['temperature_c'] >= min_temp) & (df['temperature_c'] <= max_temp)
+    temp_filtered_count = temp_filter.sum()
+    temp_removed = original_count - temp_filtered_count
+    print(f"   🌡️  Temperature filter: kept {temp_filtered_count}, removed {temp_removed} rows")
+    
+    # Quality filter
+    quality_filtered_count = quality_filter.sum()
+    quality_removed = original_count - quality_filtered_count
+    print(f"   🏷️  Quality filter: kept {quality_filtered_count}, removed {quality_removed} rows")
+    
+    # Combined filter
+    combined_filter = temp_filter & quality_filter
+    filtered_df = df[combined_filter].copy()
+    
+    final_count = len(filtered_df)
+    total_removed = original_count - final_count
+    removal_pct = (total_removed / original_count) * 100 if original_count > 0 else 0
+    
+    print(f"\n📈 FILTERING RESULTS:")
+    print(f"   Original dataset: {original_count} rows")
+    print(f"   After filtering: {final_count} rows kept")
+    print(f"   Total removed: {total_removed} rows ({removal_pct:.1f}%)")
+    
+    # Show statistics of filtered data
+    if not filtered_df.empty:
+        print(f"\n📊 FILTERED DATA SUMMARY:")
+        print(f"   Temperature range: {filtered_df['temperature_c'].min():.1f}°C to {filtered_df['temperature_c'].max():.1f}°C")
+        print(f"   Average temperature: {filtered_df['temperature_c'].mean():.1f}°C")
+        print(f"   Quality distribution: {dict(filtered_df['data_quality'].value_counts())}")
+    else:
+        print(f"\n⚠️  WARNING: No data remains after filtering!")
+        print(f"   Consider relaxing your filtering criteria.")
+    
+    print(f"\n✅ Filtering complete! Ready for analysis.")
+    
+    return filtered_df
 
 
 # =============================================================================
@@ -158,34 +238,64 @@ def calculate_station_statistics(df):
           - Average readings per station: 200.0
     """
     
-    # TODO: Print a header
-    # TODO: Use print("=" * 50) and print("CALCULATING STATION STATISTICS")
+    # Print header
+    print("=" * 50)
+    print("CALCULATING STATION STATISTICS")
+    print("=" * 50)
     
-    # TODO: Count unique stations
-    # TODO: Use df['station_id'].nunique()
+    # Input validation
+    if df is None or len(df) == 0:
+        print("❌ ERROR: DataFrame is empty or None")
+        return pd.DataFrame()
     
-    # TODO: Group by station_id
-    # TODO: Use df.groupby('station_id')
+    # Check for required columns
+    required_columns = ['station_id', 'temperature_c', 'humidity_percent']
+    missing_columns = [col for col in required_columns if col not in df.columns]
     
-    # TODO: Calculate statistics for each group
-    # TODO: - Count of readings: use .size() or .count()
-    # TODO: - Average temperature: use .mean()
-    # TODO: Create a new DataFrame with these statistics
+    if missing_columns:
+        print(f"❌ ERROR: Missing required columns: {missing_columns}")
+        print(f"Available columns: {list(df.columns)}")
+        return pd.DataFrame()
     
-    # TODO: Reset the index to make station_id a regular column
-    # TODO: Use .reset_index()
+    # Print input data summary
+    print(f"Processing {len(df):,} temperature readings...")
     
-    # TODO: Rename columns to be clear
-    # TODO: Use .rename(columns={'temperature_c': 'avg_temperature', ...})
+    # Get unique stations
+    unique_stations = df['station_id'].unique()
+    print(f"Found {len(unique_stations)} weather stations: {list(unique_stations)}")
     
-    # TODO: Print summary statistics
-    # TODO: - Total readings analyzed
-    # TODO: - Number of stations
-    # TODO: - Average readings per station
+    # Group data by station
+    grouped = df.groupby('station_id')
     
-    # TODO: Return the statistics DataFrame
+    # Calculate statistics
+    avg_temperature = grouped['temperature_c'].mean().round(1)
+    avg_humidity = grouped['humidity_percent'].mean().round(1)
+    reading_count = grouped.size()
     
-    pass  # Remove this line when you implement the function
+    # Create summary DataFrame
+    summary = pd.DataFrame({
+        'station_id': avg_temperature.index,
+        'avg_temperature': avg_temperature.values,
+        'avg_humidity': avg_humidity.values,
+        'reading_count': reading_count.values
+    })
+    
+    # Print summary of results
+    print(f"\nTemperature range across all stations: {summary['avg_temperature'].min():.1f}°C to {summary['avg_temperature'].max():.1f}°C")
+    print(f"Humidity range across all stations: {summary['avg_humidity'].min():.1f}% to {summary['avg_humidity'].max():.1f}%")
+    print(f"Total readings processed: {summary['reading_count'].sum():,}")
+    print(f"Average readings per station: {summary['reading_count'].mean():.0f}")
+    
+    # Find temperature extremes
+    hottest_station = summary.loc[summary['avg_temperature'].idxmax()]
+    coolest_station = summary.loc[summary['avg_temperature'].idxmin()]
+    
+    print(f"\nHottest station: {hottest_station['station_id']} (avg: {hottest_station['avg_temperature']:.1f}°C)")
+    print(f"Coolest station: {coolest_station['station_id']} (avg: {coolest_station['avg_temperature']:.1f}°C)")
+    
+    print("\nStation statistics calculated successfully!")
+    
+    return summary
 
 
 # =============================================================================
@@ -193,7 +303,7 @@ def calculate_station_statistics(df):
 # =============================================================================
 
 def join_station_data(stations_df, readings_df):
-   """
+    """
     Join sensor readings with station metadata
     
     This function joins station information (name, location) with temperature readings.
@@ -216,25 +326,64 @@ def join_station_data(stations_df, readings_df):
         Joined table: 1000 rows with station details added!
     """
     
-    # TODO: Print a header
-    # TODO: Use print("=" * 50) and print("JOINING STATION DATA")
+    print("=" * 50)
+    print("JOINING STATION DATA")
+    print("=" * 50)
     
-    # TODO: Print the shapes of both input DataFrames
-    # TODO: Show how many stations and how many readings
+    # Input validation
+    if readings_df is None or len(readings_df) == 0:
+        print("❌ ERROR: Readings DataFrame is empty or None")
+        return pd.DataFrame()
     
-    # TODO: Join the DataFrames using pd.merge()
-    # TODO: Use the 'station_id' column as the key
-    # TODO: Use how='left' to keep all readings even if station info is missing
+    if stations_df is None or len(stations_df) == 0:
+        print("❌ ERROR: Stations DataFrame is empty or None") 
+        return pd.DataFrame()
     
-    # TODO: Print the shape of the joined DataFrame
-    # TODO: Verify all readings are still present
+    # Check for required join key
+    if 'station_id' not in readings_df.columns:
+        print("❌ ERROR: 'station_id' column missing from readings data")
+        return pd.DataFrame()
     
-    # TODO: Print the new columns that were added
-    # TODO: Show which columns came from the stations table
+    if 'station_id' not in stations_df.columns:
+        print("❌ ERROR: 'station_id' column missing from stations data")
+        return pd.DataFrame()
     
-    # TODO: Return the joined DataFrame
+    # Print input summary
+    print(f"Input data:")
+    print(f"  Readings: {len(readings_df)} rows, {len(readings_df.columns)} columns")
+    print(f"  Stations: {len(stations_df)} rows, {len(stations_df.columns)} columns")
     
-    pass  # Remove this line when you implement the function
+    # Analyze join keys
+    readings_stations = set(readings_df['station_id'].unique())
+    metadata_stations = set(stations_df['station_id'].unique())
+    
+    print(f"\nJoin analysis:")
+    print(f"  Stations in readings: {len(readings_stations)}")
+    print(f"  Stations in metadata: {len(metadata_stations)}")
+    print(f"  Stations in both: {len(readings_stations & metadata_stations)}")
+    
+    if readings_stations - metadata_stations:
+        print(f"  ⚠️ Readings without metadata: {readings_stations - metadata_stations}")
+    if metadata_stations - readings_stations:
+        print(f"  ℹ️ Metadata without readings: {metadata_stations - readings_stations}")
+    
+    # Perform left join to keep all readings
+    print(f"\nPerforming LEFT JOIN (keeping all readings)...")
+    result = pd.merge(readings_df, stations_df, on='station_id', how='left')
+    
+    # Validate results
+    missing_metadata_count = result['station_name'].isna().sum()
+    complete_records = len(result) - missing_metadata_count
+    
+    print(f"\nJoin results:")
+    print(f"  Total records: {len(result)}")
+    print(f"  Complete records: {complete_records}")
+    print(f"  Records with missing metadata: {missing_metadata_count}")
+    print(f"  Data completeness: {100*complete_records/len(result):.1f}%")
+    
+    print("\n✅ Station data join completed successfully!")
+    
+    return result
 
 
 # =============================================================================
